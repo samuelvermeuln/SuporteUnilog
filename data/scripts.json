@@ -1,0 +1,4 @@
+{
+    "updateSituacaoPedido" : "insert into historico_pedido( id, data, observacao, situacao, pedido_id, descricao_erro_integracao, erro_integracao ) values ( nextval('historico_pedido_seq'), current_timestamp - cast('03:00:00' as time), null, '{situacao}', ( select id from pedido where numero = '{numero}' and depositante_id = {depositante_id} ), '{descricao}', false );",
+    "insertHistoricoPedido" : "update pedido set situacao = '{situacao}' where depositante_id = {depositante_id} and numero in ('{numero}');"
+}
