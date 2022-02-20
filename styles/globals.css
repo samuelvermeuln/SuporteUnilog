@@ -3,7 +3,7 @@
 html,
 body {
     font-family: "Roboto";
-    background-color: rgb(179, 179, 179);
+    background-color: #b3aca4;
 }
 
 .container-custon {
@@ -19,15 +19,11 @@ input:focus {
 
 .card-style{
     margin-top: 30vh;
-    margin-left: 9vw;
+    margin-left: 6vw;
 }
-
-#Card-Custom:hover{
-    /* background-color: black; */
-}
-
 #Card-Custom{
     border-radius: 15px;
+    color:aliceblue
 }
 
 /* ToastDemo.css */
@@ -43,3 +39,6 @@ input:focus {
     }
 }
                  
+.carregar:hover{
+    background-color: #fdfbfbd4 !important;
+}

@@ -6,14 +6,15 @@ export default function cards(req, res) {
       "title": "Sistema de Suporte",
       "subTitle": "Click Aqui para ir para o sistema de Suporte",
       "caminho": "/suporte",
-      "cor": ""
+      "color": "#260d33"
     },
     {
       "title": "Sistema Para Contabilidade",
       "subTitle": "Click aqui para ir para o sistema Contabilidade",
       "caminho": "/contabilidade",
-      "cor": ""
+      "color": "#106b87"
     }
+    
   ]
 
   res.status(200).json(cards)
