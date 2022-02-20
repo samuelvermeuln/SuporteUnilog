@@ -18,7 +18,7 @@ export default function Layout({ children }) {
                 <Navbar.Brand>
                     <Navbar.Item href="/">
                         <Title style={{ color: "white" }}>
-                            Suporte Sistema
+                           Bem-vindo ao Sistema do Time De Projetos
                         </Title>
                     </Navbar.Item>
                 </Navbar.Brand>

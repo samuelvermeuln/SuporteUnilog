@@ -1,221 +1,53 @@
-import Layout from "../components/Layout";
-import { useState, useEffect } from "react";
-import {
-    Container,
-    Select,
-    Title,
-    Column,
-    Message,
-    Textarea,
-    Button,
-} from "rbx";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import Link from "next/link";
+
+import { AnimateSharedLayout } from "framer-motion"
+import { Card } from 'primereact/card';
+import { motion } from "framer-motion";
+
 
 import clipboard from "clipboard";
+import Layout from './../components/Layout';
 
-import data from "../data/data.json";
-import scripts from "../data/scripts.json";
 
-export default function Home() {
-    const [ListaSituacoes, setListaSituacoes] = useState(data.situacoes);
-    const [ListaDepositantes, setListaDepositantes] = useState(
-        data.depositantes
-    );
 
-    const [InputSituacao, setInputSituacao] = useState(null);
-    const [InputDepositante, setInputDepositante] = useState(null);
-    const [InputDescricao, setInputDescricao] = useState("");
-    const [InputNumeros, setInputNumeros] = useState("");
+export default function index() {
 
-    useEffect(() => {
-        // Ordena a lista em ordem alfabetica.
-        setListaSituacoes(ListaSituacoes.sort());
-        setInputSituacao(ListaSituacoes[0]);
-        setInputDepositante(ListaDepositantes[0].id);
-        console.log(InputSituacao + " " + InputDepositante);
-    }, []);
+    const [CardsObj, setCardsObj] = useState(null)
 
-    const escolhaSitucao = (e) => {
-        setInputSituacao(e.target.value);
-    };
+    useEffect(async () => {
+        var localHost = typeof window !== 'undefined' && window.location.href ? window.location.href : '';
+        localHost += 'api/cards'
 
-    const escolhaDepositante = (e) => {
-        setInputDepositante(e.target.value);
-    };
-
-    const buttonGerar = (e) => {
-        const quebra = InputNumeros.replaceAll('"', "").split("\n").filter(x => x != '');
-
-        console.log(quebra);
-
-        var aux = "";
-        quebra.forEach((numero) => {
-            aux +=
-                scripts.updateSituacaoPedido
-                    .replace("{situacao}", InputSituacao)
-                    .replace("{depositante_id}", InputDepositante)
-                    .replace("{numero}", numero)
-                    .replace("{descricao}", InputDescricao) + "\n";
-            aux +=
-                scripts.insertHistoricoPedido
-                    .replace("{situacao}", InputSituacao)
-                    .replace("{depositante_id}", InputDepositante)
-                    .replace("{numero}", numero) + "\n\n";
-        });
-
-        copyToClipboard(aux);
-    };
-
-    const copyToClipboard = (text) => {
-        var textField = document.createElement("textarea");
-        textField.innerHTML = text;
-        document.body.appendChild(textField);
-        textField.select();
-        document.execCommand("copy");
-        textField.remove();
-    };
+        const { data } = await axios.get(`${localHost}`)
+        setCardsObj(data);
+    }, [])
 
     return (
-        <div>
+        <>
             <Layout>
-                <Container>
-                    <br />
-                    <Message>
-                        <Message.Header>
-                            <Title size={4} style={{ color: "white" }}>
-                                Atualização de Situação
-                            </Title>
-                        </Message.Header>
-                        <Message.Body>
-                            <Column.Group>
-                                <Column>
-                                    <Column.Group>
-                                        <Column>
-                                            <Title
-                                                size={5}
-                                                style={{ color: "black" }}
-                                            >
-                                                Situação:{" "}
-                                            </Title>
-                                            <Select.Container>
-                                                <Select
-                                                    onChange={(e) =>
-                                                        escolhaSitucao(e)
-                                                    }
-                                                >
-                                                    {ListaSituacoes.map(
-                                                        (answer, i) => {
-                                                            return (
-                                                                <Select.Option
-                                                                    key={i}
-                                                                    value={
-                                                                        answer
-                                                                    }
-                                                                >
-                                                                    {answer}
-                                                                </Select.Option>
-                                                            );
-                                                        }
-                                                    )}
-                                                </Select>
-                                            </Select.Container>
-                                        </Column>
-                                    </Column.Group>
-
-                                    <Column.Group>
-                                        <Column>
-                                            <Title
-                                                size={5}
-                                                style={{ color: "black" }}
-                                            >
-                                                Depositante:{" "}
-                                            </Title>
-                                            <Select.Container>
-                                                <Select
-                                                    onChange={(e) =>
-                                                        escolhaDepositante(e)
-                                                    }
-                                                >
-                                                    {ListaDepositantes.map(
-                                                        (answer, i) => {
-                                                            return (
-                                                                <Select.Option
-                                                                    key={i}
-                                                                    value={
-                                                                        answer.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        answer.nome
-                                                                    }
-                                                                </Select.Option>
-                                                            );
-                                                        }
-                                                    )}
-                                                </Select>
-                                            </Select.Container>
-                                        </Column>
-                                    </Column.Group>
-                                </Column>
-                            </Column.Group>
-
-                            {/* Segunda Coluna */}
-
-                            <Column.Group>
-                                <Column>
-                                    <Column.Group>
-                                        <Column>
-                                            <Title
-                                                size={5}
-                                                style={{ color: "black" }}
-                                            >
-                                                Numeros Pedidos:{" "}
-                                            </Title>
-                                            <Textarea
-                                                onChange={(e) =>
-                                                    setInputNumeros(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                placeholder="Numero Pedidos"
-                                            />
-                                        </Column>
-                                    </Column.Group>
-
-                                    <Column.Group>
-                                        <Column>
-                                            <Title
-                                                size={5}
-                                                style={{ color: "black" }}
-                                            >
-                                                Descrição:{" "}
-                                            </Title>
-                                            <Textarea
-                                                onChange={(e) =>
-                                                    setInputDescricao(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                placeholder="Descrição"
-                                            />
-                                        </Column>
-                                    </Column.Group>
-                                </Column>
-                            </Column.Group>
-
-                            <Column.Group>
-                                <Column>
-                                    <Button
-                                        onClick={(e) => buttonGerar(e)}
-                                        color="success"
-                                    >
-                                        Gerar
-                                    </Button>
-                                </Column>
-                            </Column.Group>
-                        </Message.Body>
-                    </Message>
-                </Container>
+                <div className="card-container indigo-container overflow-hidden card-style" >
+                    <div className="flex">
+                        {
+                            CardsObj?.map(value => {
+                                return (
+                                    <Link href={value.caminho}>
+                                        <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 1 }}>
+                                            <div className="flex-1 md:flex-none flex align-items-center justify-content-center font-bold text-white m-2 px-5 py-3 border-round" >
+                                                <Card title={value.title} style={{ width: '25rem', marginBottom: '2em' }} id="Card-Custom" style={{ background: `${value.cor}`}}>
+                                                    <p className="m-0" style={{ lineHeight: '1.5' }}>{value.subTitle}</p>
+                                                </Card>
+                                            </div>
+                                        </motion.div>
+                                    </Link>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
             </Layout>
-        </div>
-    );
+
+        </>
+    )
 }

@@ -3,12 +3,43 @@
 html,
 body {
     font-family: "Roboto";
-    background-color: darkgrey;
+    background-color: rgb(179, 179, 179);
+}
+
+.container-custon {
+  width: 150px;
+  height: 150px;
+  background: white;
+  border-radius: 30px;
 }
 
 input:focus {
     outline: none;
-
-
 }
 
+.card-style{
+    margin-top: 30vh;
+    margin-left: 9vw;
+}
+
+#Card-Custom:hover{
+    /* background-color: black; */
+}
+
+#Card-Custom{
+    border-radius: 15px;
+}
+
+/* ToastDemo.css */
+.toast-demo button {
+    min-width: 10rem;
+    margin-right: .5rem;
+}
+
+@media screen and (max-width: 960px) {
+    .toast-demo button {
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+}
+                 
