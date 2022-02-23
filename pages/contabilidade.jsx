@@ -96,7 +96,7 @@ export default function Contabilidade() {
     return (
         <>
             <Layout>
-                <FileUpload ref={fileUploadRef} name="dados.csv" url="http://localhost:7000/api/teste" //ENVIA PARA ESSA URL FAZ UM POST
+                <FileUpload ref={fileUploadRef} name="dados" url="http://localhost:7000/api/teste" //ENVIA PARA ESSA URL FAZ UM POST
                     multiple accept="file/*" maxFileSize={2000000}
                     onUpload={onTemplateUpload}
                     onSelect={onTemplateSelect}
