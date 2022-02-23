@@ -33,7 +33,7 @@ export default function Contabilidade() {
         });
 
         setTotalSize(_totalSize);
-        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+        // toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     }
 
     const onTemplateClear = () => {
@@ -88,16 +88,15 @@ export default function Contabilidade() {
     const chooseOptions = { icon: 'pi pi-fw pi-plus', iconOnly: true, className: 'custom-choose-btn p-button-rounded p-button-outlined carregar' };
     const uploadOptions = { icon: 'pi pi-fw pi-cloud-upload', iconOnly: true, className: 'custom-upload-btn p-button-success p-button-rounded p-button-outlined carregar' };
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined carregar' };
-   
+
     const enviaArquivo = (e) => {
         console.log(e)
     }
 
-
     return (
         <>
             <Layout>
-                <FileUpload ref={fileUploadRef} name="demo[]" url="https://primefaces.org/primereact/upload.php" //ENVIA PARA ESSA URL FAZ UM POST
+                <FileUpload ref={fileUploadRef} name="dados.csv" url="http://localhost:7000/api/teste" //ENVIA PARA ESSA URL FAZ UM POST
                     multiple accept="file/*" maxFileSize={2000000}
                     onUpload={onTemplateUpload}
                     onSelect={onTemplateSelect}
