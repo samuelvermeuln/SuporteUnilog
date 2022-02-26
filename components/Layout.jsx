@@ -18,13 +18,15 @@ export default function Layout({ children }) {
                 <Navbar.Brand>
                     <Navbar.Item href="/">
                         <Title style={{ color: "white" }}>
-                           Bem-vindo ao Sistema do Time De Projetos
+                            Bem-vindo ao Sistema do Time De Projetos
                         </Title>
                     </Navbar.Item>
                 </Navbar.Brand>
             </Navbar>
 
-            <Container>{children}</Container>
+            <Container className='container-default' >
+                {children}
+            </Container>
 
         </div>
     );

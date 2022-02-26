@@ -1,6 +1,13 @@
-import formidable from "formidable";
-import fs from "fs";
-import { parse } from "csv-parse";
+import {
+    getFilesDownlaod,
+    readFileCsv,
+    buscaDadosSoma,
+    getCnpjEmpresas,
+    getCodigos,
+    getMeses,
+    getNomeEmpresa,
+    isEmpresaCodigo,
+} from "../../controller/dirf";
 
 export const config = {
     api: {
@@ -8,56 +15,39 @@ export const config = {
     },
 };
 
-const getMeses = () => {
-    return [ '1','2','3','4','5','6','7','8','9','10','11','12' ]
-}
-
-const getCodigos = (dados) => {
-    return dados.map( item => item[0] )
-}
-
-const readFileCsv = (path) => {
-    return new Promise((resolve, reject) => {
-        var csvData = []
-        fs.createReadStream(path)
-            .pipe(parse({delimiter: ','}))
-                .on('data', function(csvrow) {
-                    csvData.push(csvrow);
-                })
-                .on('end',function() {
-                    resolve(csvData);
-                });
-    })
-}
-
-const getFilesDownlaod = (req) => {
-    return new Promise((resolve, reject) => {
-        const form = formidable({ multiples: true });
-        form.parse(req, (err, fields, files) => {
-            resolve({err, fields, files});
-        });
-    });
-};
-
 export default async (req, res) => {
     var { err, fields, files } = await getFilesDownlaod(req);
 
-    if(err) res.status(404).json({ error: err })
+    if (err) res.status(404).json({ error: err });
 
-    var pathFile = files.dados.filepath
+    // Pega o path do arquivo.
+    var pathFile = files.dados.filepath;
+    console.log(pathFile);
 
-    var arrayCvs = await readFileCsv(pathFile)
+    // Faz a leitura do csv no arquivo temporario.
+    var arrayCvs = await readFileCsv(pathFile);
 
-    // Remove a primeira posicao
-    arrayCvs.shift()
+    // Remove a primeira posicao.
+    arrayCvs.shift();
 
-    console.log( getCodigos(arrayCvs) )
+    // Info Iniciais.
+    const codigos = getCodigos(arrayCvs).sort();
+    const empresas = getCnpjEmpresas(arrayCvs).sort();
+    const meses = getMeses();
 
+    for (const codigo of codigos) {
+        for (const empresa of empresas) {
+            let existe = isEmpresaCodigo(codigo, empresa, arrayCvs);
+            if (!existe) continue;
+            console.log(
+                `Codigo: ${codigo} Empresa: ${empresa} Existe: ${existe}`
+            );
+        }
+    }
 
     res.status(200).json({
         dados: files.dados,
         isArray: Array.isArray(files.dados),
-        csv: arrayCvs
+        csv: arrayCvs,
     });
-
 };

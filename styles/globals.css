@@ -4,18 +4,14 @@ html,
 body {
     font-family: "Roboto";
     background-color: #b3aca4;
-}
-
-.container-custon {
-    width: 150px;
-    height: 150px;
-    background: white;
-    border-radius: 30px;
+    height: 100%;
 }
 
 input:focus {
     outline: none;
 }
+
+
 uu.card-style {
     margin-top: 30vh;
     margin-left: 6vw;
