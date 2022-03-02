@@ -49,5 +49,6 @@ export default async (req, res) => {
         dados: files.dados,
         isArray: Array.isArray(files.dados),
         csv: arrayCvs,
+        enviar: true
     });
 };
