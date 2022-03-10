@@ -10,8 +10,6 @@ import styled from 'styled-components';
 import clipboard from "clipboard";
 import Layout from './../components/Layout';
 
-
-
 export default function index() {
 
     const [CardsObj, setCardsObj] = useState(null)

@@ -7,6 +7,7 @@ import {
     Message,
     Textarea,
     Button,
+    Checkbox,
 } from "rbx";
 
 
@@ -30,6 +31,7 @@ export default function Home() {
     const [InputDepositante, setInputDepositante] = useState(null);
     const [InputDescricao, setInputDescricao] = useState("");
     const [InputNumeros, setInputNumeros] = useState("");
+    const [isHistorico, setIsHistorico] = useState(true);
 
     useEffect(() => {
         // Ordena a lista em ordem alfabetica.
@@ -55,17 +57,14 @@ export default function Home() {
         showSuccess()
 
         const quebra = InputNumeros.replaceAll('"', "").split("\n").filter(x => x != '');
-
-        console.log(quebra);
-
         var aux = "";
         quebra.forEach((numero) => {
-            aux +=
+            isHistorico ? aux +=
                 scripts.updateSituacaoPedido
                     .replace("{situacao}", InputSituacao)
                     .replace("{depositante_id}", InputDepositante)
                     .replace("{numero}", numero)
-                    .replace("{descricao}", InputDescricao) + "\n";
+                    .replace("{descricao}", InputDescricao) + "\n" : null
             aux +=
                 scripts.insertHistoricoPedido
                     .replace("{situacao}", InputSituacao)
@@ -132,6 +131,15 @@ export default function Home() {
                                                     )}
                                                 </Select>
                                             </Select.Container>
+                                        </Column>
+                                        <Column>
+                                            <Title size={5} style={{ color: "black" }} >
+                                                Gerar Historico : {'  '}
+                                                <Checkbox onChange={e => setIsHistorico(e.target.checked)}
+                                                    checked={isHistorico}
+                                                />
+                                                {isHistorico ? ' SIM' : ' NÂO'}
+                                            </Title>
                                         </Column>
                                     </Column.Group>
 
