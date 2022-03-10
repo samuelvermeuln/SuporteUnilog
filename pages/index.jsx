@@ -43,7 +43,11 @@ export default function index() {
                                         <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 1 }}>
                                             <div className="flex-1 md:flex-none flex align-items-center justify-content-center font-bold text-white m-2 px-5 py-3 border-round" >
                                                 <StyleCard>
-                                                    <Card title={value.title} style={{ width: '25rem', marginBottom: '2em' }} id="Card-Custom" style={{ backgroundColor:`${value.color}` }} >
+                                                    <Card
+                                                        title={value.title}
+                                                        style={{ width: '25rem', marginBottom: '2em', backgroundColor:`${value.color}` }}
+                                                        id="Card-Custom"
+                                                    >
                                                         <p className="m-0" style={{ lineHeight: '1.5' }}>{value.subTitle}</p>
                                                     </Card>
                                                 </StyleCard>
