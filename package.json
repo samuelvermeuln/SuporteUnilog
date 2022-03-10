@@ -9,7 +9,7 @@
         "dev": "next dev -p 7000",
         "build": "next build",
         "start": "next start -p $PORT",
-        "heroku-postbuild": "next run build ",
+        "heroku-postbuild": "npm run build && node --trace-warnings ",
         "lint": "next lint"
     },
     "dependencies": {
