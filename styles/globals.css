@@ -5,12 +5,12 @@ body {
     font-family: "Roboto";
     background-color: #b3aca4;
     height: 100%;
+    overflow-x: hidden;
 }
 
 input:focus {
     outline: none;
 }
-
 
 uu.card-style {
     margin-top: 30vh;
