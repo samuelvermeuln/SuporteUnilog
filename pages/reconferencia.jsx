@@ -1,18 +1,20 @@
 import React, { useRef, useState } from "react";
-import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
 import { Tag } from "primereact/tag";
-import { BiCategoryAlt, BiChevronDownCircle, BiCustomize, BiWindowClose,BiDna } from "react-icons/bi";
-
+import { BiCategoryAlt, BiChevronDownCircle, BiCustomize, BiWindowClose, BiDna } from "react-icons/bi";
+import { Button } from 'primereact/button';
 import Layout from "../components/Layout";
 import { PickList } from 'primereact/picklist';
 import { CardPersonalizado } from "../components/Cards";
+import { Botao } from "../components/botao";
+import { Dialog } from 'primereact/dialog';
 
 export default function Reconferencia() {
 
     const [origen, setOrigem] = useState([]);
     const [destino, setDestino] = useState([]);
+    const [isModal, setIsModal] = useState(false);
 
     const onChange = (event) => {
         setOrigem(event.source);
@@ -56,6 +58,21 @@ export default function Reconferencia() {
                     showTargetControls={false}
                     style={{ marginTop: '40px' }}
                 />
+
+                {/* <Botao nomeBotao={'Finalizar Conferencia'}/> */}
+
+                <Button label="Finalizar Conferencia" className="p-button-danger" onClick={() => { console.log('Chava a fun. aqui KARAI'),setIsModal(true) }} />
+
+
+                <Dialog
+                    visible={isModal}
+                    style={{ width: '50vw' }}
+                    footer={''}
+                    position={'center'}
+                    onHide={() => setIsModal(false)}
+                ></Dialog>
+
+
             </Layout>
         </>
     );
