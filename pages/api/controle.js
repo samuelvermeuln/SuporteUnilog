@@ -13,8 +13,12 @@ export default async (req, res) => {
     const uploadPath = './upload'
 
     if( action == 'LISTAR' ){
-        const arquivos = fs.readdirSync(uploadPath);
-        res.status(200).json({ arquivos })
+        try {
+            const arquivos = fs.readdirSync(uploadPath);
+            res.status(200).json({ arquivos })
+        } catch (error) {
+            res.status(500).json({ error })
+        }
     }
 
     if( action == 'DELETAR' ){
@@ -25,7 +29,7 @@ export default async (req, res) => {
             }
             res.status(200).json({ message: "Deletados com sucesso." })
         } catch (error) {
-            res.status(404).json({ error })
+            res.status(500).json({ error })
         }
     }
 

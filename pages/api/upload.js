@@ -23,7 +23,11 @@ export const config = {
 };
 
 export default async (req, res) => {
-    var { err, fields, files } = await getFilesDownlaod(req);
-    if(err) res.status(404).json(err)
-    res.status(200).json({ fields, files });
+    try {
+        var { err, fields, files } = await getFilesDownlaod(req);
+        if(err) res.status(404).json({ error: err })
+        res.status(200).json({ fields, files });
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }
