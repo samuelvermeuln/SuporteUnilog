@@ -10,7 +10,7 @@ export default async (req, res) => {
     const isValidAction = validateActions.includes(action)
     if( !isValidAction ) res.status(404).json({error: "Ação informada invalida."})
 
-    const uploadPath = './upload'
+    const uploadPath = '/app/upload'
 
     if( action == 'LISTAR' ){
         try {
