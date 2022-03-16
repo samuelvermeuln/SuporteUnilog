@@ -23,7 +23,7 @@ export default async (req, res) => {
         const { numero_onda } = req.body
         if( !numero_onda ) res.status(404).json({ error: "Informe o numero da onda." })
 
-        const uploadPath = './upload'
+        const uploadPath = '/app/upload'
         const arquivos = fs.readdirSync(uploadPath);
 
         const isExistsOnda = arquivos.includes( numero_onda + '.csv' )

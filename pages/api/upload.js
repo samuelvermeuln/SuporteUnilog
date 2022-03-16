@@ -5,7 +5,7 @@ const getFilesDownlaod = (req) => {
     return new Promise((resolve, reject) => {
         const form = formidable({
             multiples: true,
-            uploadDir: './upload'
+            uploadDir: '/app/upload'
         });
         form.on('file', function(field, file) {
             fs.renameSync(file.filepath, form.uploadDir + "\\" + file.originalFilename);
