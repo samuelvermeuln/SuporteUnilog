@@ -19,9 +19,9 @@ const readFileCsv = (path) => {
 export default async (req, res) => {
 
     try {
-        const dadosPath = fs.readdirSync('./');
+        const dadosPath = fs.readdirSync('./upload');
         console.log(dadosPath);
-        res.status(200).json( { error } );
+        res.status(200).json( { dadosPath } );
         // const { numero_onda } = req.body
         // if( !numero_onda ) res.status(404).json({ error: "Informe o numero da onda." })
 
