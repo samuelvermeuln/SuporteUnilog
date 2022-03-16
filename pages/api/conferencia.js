@@ -19,7 +19,7 @@ const readFileCsv = (path) => {
 export default async (req, res) => {
 
     try {
-        const dadosPath = fs.readdirSync(uploadPath);
+        const dadosPath = fs.readdirSync('./');
         console.log(dadosPath);
         res.status(200).json( { error } );
         // const { numero_onda } = req.body
