@@ -14,6 +14,12 @@ export default function cards(req, res) {
             caminho: "/contabilidade",
             color: "#106b87",
         },
+        {
+            title: "Reconferencia",
+            subTitle: "Click aqui para Realizar a Reconferencia dos pedidos",
+            caminho: "/reconferencia",
+            color: "#ee9c92",
+        },
     ];
 
     res.status(200).json(cards);

@@ -37,3 +37,8 @@ uu.card-style {
 .carregar:hover {
     background-color: #fdfbfbd4 !important;
 }
+
+
+.p-card-title{
+    color:aliceblue;
+}

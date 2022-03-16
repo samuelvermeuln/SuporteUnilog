@@ -33,13 +33,15 @@ export default function index() {
         <>
             <Layout>
                 <div className="card-container indigo-container overflow-hidden card-style" >
-                    <div className="flex" style={{marginLeft:'50px'}}>
+                    <div className="flex" style={{marginLeft:'50px',display: 'flex',flexDirection:'column'}}>
                         {
                             CardsObj?.map(value => {
                                 return (
                                     <Link href={value.caminho}>
                                         <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 1 }}>
-                                            <div className="flex-1 md:flex-none flex align-items-center justify-content-center font-bold text-white m-2 px-5 py-3 border-round" >
+                                            <div className="flex-1 md:flex-none flex align-items-center justify-content-center font-bold text-white m-2 px-5 py-3 border-round"
+
+                                            >
                                                 <StyleCard>
                                                     <Card
                                                         title={value.title}
