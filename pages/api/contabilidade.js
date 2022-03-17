@@ -31,9 +31,9 @@ export default async (req, res) => {
     arrayCvs.shift();
 
     // Info Iniciais.
-    const codigos = getCodigos(arrayCvs).sort();
+    const codigos  = getCodigos(arrayCvs).sort();
     const empresas = getCnpjEmpresas(arrayCvs).sort();
-    const meses = getMeses();
+    const meses    = getMeses();
 
     for (const codigo of codigos) {
         for (const empresa of empresas) {
