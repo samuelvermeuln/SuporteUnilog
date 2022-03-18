@@ -10,7 +10,7 @@ export default async (req, res) => {
         if (!buscaOnda) return res.status(404).json({ error: "Onda ainda não foi carregada. Peça ao suporte para enviar a onda." })
 
         return res.status(200).json({
-            buscaOnda
+            onda: buscaOnda
         })
 
     } catch (error) {
