@@ -85,12 +85,28 @@ export default function Reconferencia() {
 
         if (arrayCheckout.includes(inputChaveDanfe)) {
             Alerta.warning("Erro Pedido Duplicado", "Esse pedido ja vou conferido.")
-            return;
         } else {
             arrayCheckout.push(inputChaveDanfe)
+            var index = buscaIndexChave(inputChaveDanfe, arrayOrigem);
+
+            if (index != -1) {
+                var element = arrayOrigem[index]
+                arrayOrigem = removeIndexArray(arrayOrigem, index)
+                arrayDestino.push(element)
+
+                setDestino(arrayDestino)
+                setOrigem(arrayOrigem)
+                setCheckout(arrayCheckout)
+            } else {
+                Alerta.warning("Erro Pedido Não Encontrado", "Pedido não esta presente nessa onda.")
+            }
+
         }
 
+        setInputChaveDanfe('')
+    }
 
+    const finalizarConferencia = () => {
 
     }
 
@@ -103,10 +119,8 @@ export default function Reconferencia() {
         return -1;
     }
 
-    function removeIndexArray(arr, index) {
-        if (index > -1) {
-            arr.splice(index, 1);
-        }
+    const removeIndexArray = (arr, index) => {
+        if (index > -1) arr.splice(index, 1);
         return arr;
     }
 
@@ -130,7 +144,9 @@ export default function Reconferencia() {
                         <i className="pi pi-search" />
                         <InputText
                             style={{ width: '100%' }}
-                            value={inputChaveDanfe} onChange={(e) => setInputChaveDanfe(e.target.value)}
+                            value={inputChaveDanfe}
+                            onChange={(e) => setInputChaveDanfe(e.target.value)}
+                            onKeyPress={(e) => { if (e.charCode === 13) conferirChaveDanfeInformada() }}
                             placeholder="Ler Chave Danfe"
                             ref={inputChaveDanfeRef}
                         />
