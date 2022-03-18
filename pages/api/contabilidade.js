@@ -35,15 +35,15 @@ export default async (req, res) => {
     const empresas = getCnpjEmpresas(arrayCvs).sort();
     const meses    = getMeses();
 
-    for (const codigo of codigos) {
-        for (const empresa of empresas) {
-            let existe = isEmpresaCodigo(codigo, empresa, arrayCvs);
-            if (!existe) continue;
-            console.log(
-                `Codigo: ${codigo} Empresa: ${empresa} Existe: ${existe}`
-            );
-        }
-    }
+    // for (const codigo of codigos) {
+    //     for (const empresa of empresas) {
+    //         let existe = isEmpresaCodigo(codigo, empresa, arrayCvs);
+    //         if (!existe) continue;
+    //         console.log(
+    //             `Codigo: ${codigo} Empresa: ${empresa} Existe: ${existe}`
+    //         );
+    //     }
+    // }
 
     res.status(200).json({
         dados: files.dados,

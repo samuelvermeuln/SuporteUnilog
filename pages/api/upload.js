@@ -1,20 +1,5 @@
-import formidable from "formidable";
-import fs from "fs";
-
-const getFilesDownlaod = (req) => {
-    return new Promise((resolve, reject) => {
-        const form = formidable({
-            multiples: true,
-            uploadDir: './upload'
-        });
-        form.on('file', function(field, file) {
-            fs.renameSync(file.filepath, form.uploadDir + "\\" + file.originalFilename);
-        });
-        form.parse(req, (err, fields, files) => {
-            resolve({err, fields, files});
-        });
-    });
-};
+import { getFilesDownlaod, readFileCsv } from "../../controller/dirf";
+import Conferencia from "../../db/models/Conferencia"
 
 export const config = {
     api: {
@@ -24,10 +9,36 @@ export const config = {
 
 export default async (req, res) => {
     try {
-        var { err, fields, files } = await getFilesDownlaod(req);
-        if(err) res.status(404).json({ error: err })
-        res.status(200).json({ fields, files });
+        var { error, fields, files } = await getFilesDownlaod(req);
+
+        if(error) return res.status(404).json( { error } )
+
+        // Pega o path do arquivo.
+        var mimetype = files.dados.mimetype
+        if( mimetype !== 'text/csv' ) return res.status(404).json({ error: "Tipo de arquivo não aceito." })
+
+        var pathFile = files.dados.filepath;
+        var fileName = files.dados.originalFilename
+
+        var codigo   = fileName.replace('.csv', '')
+        var pedidos = await readFileCsv(pathFile);
+        pedidos.shift();
+
+        const buscaOnda = await Conferencia.findOne( { codigo: codigo } )
+        if( buscaOnda ) return res.status(404).json({ error: "Onda ja esta importada." })
+
+        const onda = {
+            codigo,
+            pedidos
+        }
+
+        const importNewOnda = await Conferencia.create(onda)
+
+        return res.status(201).json({
+            onda: importNewOnda
+        })
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({error})
     }
+
 }

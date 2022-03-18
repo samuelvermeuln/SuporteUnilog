@@ -1,45 +1,19 @@
-import fs from "fs";
-import { parse } from "csv-parse";
-import path from "path";
 
-const readFileCsv = (path) => {
-    return new Promise((resolve, reject) => {
-        var csvData = []
-        fs.createReadStream(path)
-            .pipe(parse({delimiter: ','}))
-                .on('data', function(csvrow) {
-                    csvData.push(csvrow);
-                })
-                .on('end',function() {
-                    resolve(csvData);
-                });
-    })
-}
+import Conferencia from "../../db/models/Conferencia"
 
 export default async (req, res) => {
-
     try {
-        const dadosPath = fs.readdirSync('./upload');
-        console.log(dadosPath);
-        res.status(200).json( { dadosPath } );
-        // const { numero_onda } = req.body
-        // if( !numero_onda ) res.status(404).json({ error: "Informe o numero da onda." })
+        const { codigo } = req.query;
+        if (!codigo) return res.status(404).json({ error: "Codigo da onda não informado, na url query." })
 
-        // const uploadPath = '/app/upload'
-        // const arquivos = fs.readdirSync(uploadPath);
+        const buscaOnda = await Conferencia.findOne({ codigo: codigo })
+        if (!buscaOnda) return res.status(404).json({ error: "Onda ainda não foi carregada. Peça ao suporte para enviar a onda." })
 
-        // const isExistsOnda = arquivos.includes( numero_onda + '.csv' )
-        // if(!isExistsOnda) res.status(404).json({ error: "Onda não encontrada. Informe a onda para o suporte, subir o arquivo de verificação da onda." })
+        return res.status(200).json({
+            buscaOnda
+        })
 
-        // const pathArquivoOnda = path.join( uploadPath, numero_onda + '.csv' )
-        // const dados = await readFileCsv(pathArquivoOnda)
-
-        // // Remove a primeira posicao do array
-        // dados.shift()
-
-        // res.status(200).json( { pedidos: dados } );
     } catch (error) {
-        res.status(500).json( { error } );
+        return res.status(500).json({ error })
     }
-
 }
