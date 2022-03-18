@@ -2,8 +2,8 @@ import Swal from 'sweetalert2'
 
 const Alerta = class {
 
-    error(titulo, texto){
-        Swal.fire({
+    async error(titulo, texto){
+        await Swal.fire({
             customClass: {
                 container: 'my-swal'
             },
@@ -13,8 +13,8 @@ const Alerta = class {
         })
     }
 
-    success(titulo, texto){
-        Swal.fire({
+    async success(titulo, texto){
+        await Swal.fire({
             customClass: {
                 container: 'my-swal'
             },
@@ -24,8 +24,8 @@ const Alerta = class {
         })
     }
 
-    warning(titulo, texto){
-        Swal.fire({
+    async warning(titulo, texto){
+        await Swal.fire({
             customClass: {
                 container: 'my-swal'
             },
@@ -35,8 +35,8 @@ const Alerta = class {
         })
     }
 
-    info(titulo, texto){
-        Swal.fire({
+    async info(titulo, texto){
+        await Swal.fire({
             customClass: {
                 container: 'my-swal'
             },

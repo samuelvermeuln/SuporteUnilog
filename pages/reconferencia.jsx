@@ -14,19 +14,26 @@ import api from "../service/api";
 export default function Reconferencia() {
 
     // Modal.
-    const [ modalTabela, setModalTabela ] = useState(false);
-    const [ modalCodigo, setModalCodigo ] = useState(false);
+    const [modalTabela, setModalTabela] = useState(false);
+    const [modalCodigo, setModalCodigo] = useState(false);
 
     // Array de Conferencia.
-    const [origen, setOrigem] = useState([]);
+    const [origem, setOrigem] = useState([]);
     const [destino, setDestino] = useState([]);
+    const [checkout, setCheckout] = useState([]);
+
+    // Contadores
+    const [quantidadeOnda, setQuantidadeOnda] = useState(0);
+
+    // Variaveis
+    const [numeroOnda, setNumeroOnda] = useState(null);
 
     // Input Chave
     const inputChaveDanfeRef = useRef(null);
     const [inputChaveDanfe, setInputChaveDanfe] = useState(null);
 
     // Input Codigo da Onda
-    const  inputCodigoOndaRef = useRef(null);
+    const inputCodigoOndaRef = useRef(null);
     const [inputCodigoOnda, setInputCodigoOnda] = useState(null);
 
 
@@ -36,31 +43,71 @@ export default function Reconferencia() {
         setTimeout(() => inputCodigoOndaRef.current?.focus(), 1);
     }, []);
 
-
     // Funções e Controlers
     const buscaOndaInformada = async () => {
-        if(inputCodigoOnda == null || inputCodigoOnda === '' ){
+        if (inputCodigoOnda == null || inputCodigoOnda === '') {
             return Alerta.error("Erro Validação de Campo", "Codigo da onda não informado.")
         }
 
         try {
-            const response = await api.get('/conferencia', {
+            const { data } = await api.get('/conferencia', {
                 params: {
                     codigo: inputCodigoOnda
                 }
             })
-            Alerta.success("ONDA ENCONTRADA", null);
+
+            const { codigo, pedidos } = data.onda;
+            const quantidade = pedidos.length
+
+            setQuantidadeOnda(quantidade)
+            setNumeroOnda(codigo)
+            setOrigem(pedidos)
+            setDestino([])
+            setCheckout([])
+
+            setModalCodigo(false);
         } catch (error) {
-            let resp = error.response
-            console.log(resp);
-            Alerta.error("Erro API Request", resp.error )
+            let resp = error?.response?.data
+            Alerta.error("Erro API Request", resp.error)
         }
 
-        setModalCodigo(false);
     }
 
     const conferirChaveDanfeInformada = async () => {
+        if (inputChaveDanfe == null || inputChaveDanfe === '') {
+            Alerta.error("Erro Validação de Campo", "Chave da Danfe não informada.")
+            return;
+        }
 
+        var arrayOrigem = [...origem];
+        var arrayDestino = [...destino];
+        var arrayCheckout = [...checkout];
+
+        if (arrayCheckout.includes(inputChaveDanfe)) {
+            Alerta.warning("Erro Pedido Duplicado", "Esse pedido ja vou conferido.")
+            return;
+        } else {
+            arrayCheckout.push(inputChaveDanfe)
+        }
+
+
+
+    }
+
+    const buscaIndexChave = (chave, array) => {
+        var index = 0;
+        for (const item of array) {
+            if (item[2] == chave) return index;
+            index += 1;
+        }
+        return -1;
+    }
+
+    function removeIndexArray(arr, index) {
+        if (index > -1) {
+            arr.splice(index, 1);
+        }
+        return arr;
     }
 
 
@@ -70,12 +117,13 @@ export default function Reconferencia() {
 
                 {/* Cards da Pagina */}
                 <div style={{ display: 'flex' }}>
-                    <CardPersonalizado title="Onda" color="#ff6e49" icon={<BiCategoryAlt size={50} />} value={origen} />
-                    <CardPersonalizado title="Total" color="#ce3762" icon={<BiChevronDownCircle size={50} />} value='123' />
-                    <CardPersonalizado title="Conferido" color="#9d007a" icon={<BiWindowClose size={50} />} value='123' />
-                    <CardPersonalizado title="Faltante" color="#2f1335" icon={<BiCustomize size={50} />} value='123' />
+                    <CardPersonalizado title="Onda" color="#ff6e49" icon={<BiCategoryAlt size={50} />} value={numeroOnda} />
+                    <CardPersonalizado title="Total" color="#ce3762" icon={<BiChevronDownCircle size={50} />} value={quantidadeOnda} />
+                    <CardPersonalizado title="Conferido" color="#9d007a" icon={<BiWindowClose size={50} />} value={destino.length} />
+                    <CardPersonalizado title="Faltante" color="#2f1335" icon={<BiCustomize size={50} />} value={origem.length} />
                 </div>
 
+                {/* Input da Chave da Danfe */}
                 <div style={{ marginTop: '20px', marginBottom: '20px' }}>
                     <h5><b>BIPAR CHAVE DANFE</b></h5>
                     <span className="p-input-icon-left" style={{ width: '100%' }}>
@@ -91,7 +139,7 @@ export default function Reconferencia() {
 
                 {/* Picklist para mostrar */}
                 <PickList
-                    source={origen}
+                    source={origem}
                     target={destino}
                     itemTemplate={ItemTamplate}
                     sourceHeader="Conferencia"
@@ -129,7 +177,7 @@ export default function Reconferencia() {
                     onHide={() => setModalCodigo(false)}
                 >
                     <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-                        <h2 style={{marginBottom: '20px'}}>INFORME A ONDA</h2>
+                        <h2 style={{ marginBottom: '20px' }}>INFORME A ONDA</h2>
                         <span className="p-input-icon-left" style={{ width: '100%', marginBottom: '20px' }}>
                             <i className="pi pi-search" />
                             <InputText
@@ -137,11 +185,11 @@ export default function Reconferencia() {
                                 value={inputCodigoOnda} onChange={(e) => setInputCodigoOnda(e.target.value)}
                                 placeholder="Informar codigo da onda"
                                 ref={inputCodigoOndaRef}
-                                onKeyPress={ (e) => { if(e.charCode === 13) buscaOndaInformada() } }
+                                onKeyPress={(e) => { if (e.charCode === 13) buscaOndaInformada() }}
                             />
                         </span>
                         <Button label="Busca Onda" className="p-button-success"
-                            onClick={ buscaOndaInformada }
+                            onClick={buscaOndaInformada}
                             style={{ marginTop: '10px' }}
                         />
                     </div>
