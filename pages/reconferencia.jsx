@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
 import { Tag } from "primereact/tag";
@@ -9,19 +9,24 @@ import { PickList } from 'primereact/picklist';
 import { CardPersonalizado } from "../components/Cards";
 import { Botao } from "../components/botao";
 import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 
 export default function Reconferencia() {
 
     const [origen, setOrigem] = useState([]);
     const [destino, setDestino] = useState([]);
     const [isModal, setIsModal] = useState(false);
+    const [valueInput, setvalueInput] = useState('');
+    const inputFocus = useRef(null);
 
     const onChange = (event) => {
         setOrigem(event.source);
         setDestino(event.target);
     }
 
-
+    useEffect(() => {
+        inputFocus.current.focus();
+    }, []);
 
     const itemTemplate = (item) => {
         return (
@@ -45,6 +50,19 @@ export default function Reconferencia() {
 
                 </div>
 
+                <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+                    <h5>Bip o codigo</h5>
+                    <span className="p-input-icon-left">
+                        <i className="pi pi-search" />
+                        <InputText
+                            value={valueInput} onChange={(e) => setvalueInput(e.target.value)}
+                            placeholder="Ler Codigo"
+                            ref={inputFocus}
+                        />
+                    </span>
+
+                </div>
+
                 <PickList
                     source={origen}
                     target={destino}
@@ -61,8 +79,10 @@ export default function Reconferencia() {
 
                 {/* <Botao nomeBotao={'Finalizar Conferencia'}/> */}
 
-                <Button label="Finalizar Conferencia" className="p-button-danger" onClick={() => { console.log('Chava a fun. aqui KARAI'),setIsModal(true) }} />
-
+                <Button label="Finalizar Conferencia" className="p-button-danger"
+                    onClick={() => { console.log('Chava a fun. aqui KARAI'), setIsModal(true) }}
+                    style={{ marginTop: '10px' }}
+                />
 
                 <Dialog
                     visible={isModal}
