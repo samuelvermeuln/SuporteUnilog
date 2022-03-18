@@ -1,96 +1,151 @@
-import React, { useRef, useState, useEffect } from "react";
-import { FileUpload } from "primereact/fileupload";
-import { ProgressBar } from "primereact/progressbar";
-import { Tag } from "primereact/tag";
-import { BiCategoryAlt, BiChevronDownCircle, BiCustomize, BiWindowClose, BiDna } from "react-icons/bi";
 import { Button } from 'primereact/button';
-import Layout from "../components/Layout";
-import { PickList } from 'primereact/picklist';
-import { CardPersonalizado } from "../components/Cards";
-import { Botao } from "../components/botao";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { PickList } from 'primereact/picklist';
+import React, { useEffect, useRef, useState } from "react";
+import { BiCategoryAlt, BiChevronDownCircle, BiCustomize, BiWindowClose } from "react-icons/bi";
+import { CardPersonalizado } from "../components/Cards";
+import { ItemTamplate } from "../components/conferencia/conf-picklist";
+import Layout from "../components/Layout";
+
+import Alerta from "../components/alert/Alerta";
+import api from "../service/api";
 
 export default function Reconferencia() {
 
+    // Modal.
+    const [ modalTabela, setModalTabela ] = useState(false);
+    const [ modalCodigo, setModalCodigo ] = useState(false);
+
+    // Array de Conferencia.
     const [origen, setOrigem] = useState([]);
     const [destino, setDestino] = useState([]);
-    const [isModal, setIsModal] = useState(false);
-    const [valueInput, setvalueInput] = useState('');
-    const inputFocus = useRef(null);
 
-    const onChange = (event) => {
-        setOrigem(event.source);
-        setDestino(event.target);
-    }
+    // Input Chave
+    const inputChaveDanfeRef = useRef(null);
+    const [inputChaveDanfe, setInputChaveDanfe] = useState(null);
 
+    // Input Codigo da Onda
+    const  inputCodigoOndaRef = useRef(null);
+    const [inputCodigoOnda, setInputCodigoOnda] = useState(null);
+
+
+    // Quanto a pagina inicia
     useEffect(() => {
-        inputFocus.current.focus();
+        setModalCodigo(true)
+        setTimeout(() => inputCodigoOndaRef.current?.focus(), 1);
     }, []);
 
-    const itemTemplate = (item) => {
-        return (
-            <div className="product-item">
-                <div className="product-list-detail">
-                    <h5 className="mb-2">{item.roles}</h5>
-                </div>
-            </div>
-        );
+
+    // Funções e Controlers
+    const buscaOndaInformada = async () => {
+        if(inputCodigoOnda == null || inputCodigoOnda === '' ){
+            return Alerta.error("Erro Validação de Campo", "Codigo da onda não informado.")
+        }
+
+        try {
+            const response = await api.get('/conferencia', {
+                params: {
+                    codigo: inputCodigoOnda
+                }
+            })
+            Alerta.success("ONDA ENCONTRADA", null);
+        } catch (error) {
+            let resp = error.response
+            console.log(resp);
+            Alerta.error("Erro API Request", resp.error )
+        }
+
+        setModalCodigo(false);
     }
+
+    const conferirChaveDanfeInformada = async () => {
+
+    }
+
 
     return (
         <>
             <Layout>
 
+                {/* Cards da Pagina */}
                 <div style={{ display: 'flex' }}>
-                    <CardPersonalizado title="Numero onda" color="#ff6e49" icon={<BiCategoryAlt size={50} />} value='123' />
+                    <CardPersonalizado title="Onda" color="#ff6e49" icon={<BiCategoryAlt size={50} />} value={origen} />
                     <CardPersonalizado title="Total" color="#ce3762" icon={<BiChevronDownCircle size={50} />} value='123' />
-                    <CardPersonalizado title="Falta" color="#9d007a" icon={<BiWindowClose size={50} />} value='123' />
-                    <CardPersonalizado title="outra coisa" color="#2f1335" icon={<BiCustomize size={50} />} value='123' />
-
+                    <CardPersonalizado title="Conferido" color="#9d007a" icon={<BiWindowClose size={50} />} value='123' />
+                    <CardPersonalizado title="Faltante" color="#2f1335" icon={<BiCustomize size={50} />} value='123' />
                 </div>
 
                 <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-                    <h5>Bip o codigo</h5>
-                    <span className="p-input-icon-left">
+                    <h5><b>BIPAR CHAVE DANFE</b></h5>
+                    <span className="p-input-icon-left" style={{ width: '100%' }}>
                         <i className="pi pi-search" />
                         <InputText
-                            value={valueInput} onChange={(e) => setvalueInput(e.target.value)}
-                            placeholder="Ler Codigo"
-                            ref={inputFocus}
+                            style={{ width: '100%' }}
+                            value={inputChaveDanfe} onChange={(e) => setInputChaveDanfe(e.target.value)}
+                            placeholder="Ler Chave Danfe"
+                            ref={inputChaveDanfeRef}
                         />
                     </span>
-
                 </div>
 
+                {/* Picklist para mostrar */}
                 <PickList
                     source={origen}
                     target={destino}
-                    itemTemplate={itemTemplate}
-                    sourceHeader="Permissões"
-                    targetHeader="Permissões"
+                    itemTemplate={ItemTamplate}
+                    sourceHeader="Conferencia"
+                    targetHeader="Conferidos"
                     sourceStyle={{ height: '250px' }}
                     targetStyle={{ height: '250px' }}
-                    onChange={onChange}
+                    // onChange={onChange}
                     showSourceControls={false}
                     showTargetControls={false}
                     style={{ marginTop: '40px' }}
                 />
 
-                {/* <Botao nomeBotao={'Finalizar Conferencia'}/> */}
-
                 <Button label="Finalizar Conferencia" className="p-button-danger"
-                    onClick={() => { console.log('Chava a fun. aqui KARAI'), setIsModal(true) }}
+                    onClick={() => { console.log('Chava a fun. aqui KARAI'), setModalTabela(true) }}
                     style={{ marginTop: '10px' }}
                 />
 
                 <Dialog
-                    visible={isModal}
+                    name='modal-tabela'
+                    visible={modalTabela}
                     style={{ width: '50vw' }}
                     footer={''}
                     position={'center'}
-                    onHide={() => setIsModal(false)}
-                ></Dialog>
+                    onHide={() => setModalTabela(false)}
+                >
+
+                </Dialog>
+
+                <Dialog
+                    name='modal-codigo'
+                    visible={modalCodigo}
+                    style={{ width: '50vw', zIndex: 0.1 }}
+                    footer={''}
+                    position={'center'}
+                    onHide={() => setModalCodigo(false)}
+                >
+                    <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+                        <h2 style={{marginBottom: '20px'}}>INFORME A ONDA</h2>
+                        <span className="p-input-icon-left" style={{ width: '100%', marginBottom: '20px' }}>
+                            <i className="pi pi-search" />
+                            <InputText
+                                style={{ width: '100%' }}
+                                value={inputCodigoOnda} onChange={(e) => setInputCodigoOnda(e.target.value)}
+                                placeholder="Informar codigo da onda"
+                                ref={inputCodigoOndaRef}
+                                onKeyPress={ (e) => { if(e.charCode === 13) buscaOndaInformada() } }
+                            />
+                        </span>
+                        <Button label="Busca Onda" className="p-button-success"
+                            onClick={ buscaOndaInformada }
+                            style={{ marginTop: '10px' }}
+                        />
+                    </div>
+                </Dialog>
 
 
             </Layout>

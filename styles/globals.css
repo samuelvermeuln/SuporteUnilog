@@ -12,10 +12,17 @@ input:focus {
     outline: none;
 }
 
+/* Alert */
+.my-swal {
+    z-index: 10000 !important;
+}
+/* Alert */
+
 uu.card-style {
     margin-top: 30vh;
     margin-left: 6vw;
 }
+
 #Card-Custom {
     border-radius: 15px;
     color: aliceblue;
@@ -44,7 +51,6 @@ uu.card-style {
 }
 
 .aws-btn {
-
     --button-default-height: 48px;
     --button-default-font-size: 14px;
     --button-default-border-radius: 6px;
