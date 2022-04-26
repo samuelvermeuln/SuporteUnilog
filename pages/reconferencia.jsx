@@ -10,6 +10,7 @@ import Layout from "../components/Layout";
 
 import Alerta from "../components/alert/Alerta";
 import api from "../service/api";
+import axios from 'axios';
 
 export default function Reconferencia() {
 
@@ -50,7 +51,8 @@ export default function Reconferencia() {
         }
 
         try {
-            const { data } = await api.get('/conferencia', {
+
+            const { data } = await axios.get(`${window.location.origin}/api/conferencia`, {
                 params: {
                     codigo: inputCodigoOnda
                 }
